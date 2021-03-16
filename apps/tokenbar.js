@@ -1,4 +1,4 @@
-import { MonksTokenBar, log, error, i18n, setting, MTB_MOVEMENT_TYPE } from '../monks-tokenbar.js';
+import { PTUTokenBar, log, error, i18n, setting, MTB_MOVEMENT_TYPE } from '../ptu-tokenbar.js';
 
 export class TokenBar extends Application {
   constructor(options) {
@@ -17,8 +17,6 @@ export class TokenBar extends Application {
      * @type {number|null}
      */
     this._hover = null;
-
-    //MonksTokenBar.changeGlobalMovement("free");
 
     Hooks.on('canvasReady', () => {
       this.refresh();
@@ -39,7 +37,7 @@ export class TokenBar extends Application {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: 'tokenbar-window',
-      template: './modules/monks-tokenbar/templates/tokenbar.html',
+      template: './modules/ptu-tokenbar/templates/tokenbar.html',
       popOut: setting('popout-tokenbar'),
     });
   }
@@ -66,13 +64,13 @@ export class TokenBar extends Application {
   //}
 
   getPos() {
-    this.pos = game.user.getFlag('monks-tokenbar', 'position');
+    this.pos = game.user.getFlag('ptu-tokenbar', 'position');
 
     if (this.pos == undefined) {
       let hbpos = $('#hotbar').position();
       let width = $('#hotbar').width();
       this.pos = { left: hbpos.left + width + 4, right: '', top: '', bottom: 10 };
-      game.user.setFlag('monks-tokenbar', 'position', this.pos);
+      game.user.setFlag('ptu-tokenbar', 'position', this.pos);
     }
 
     let result = '';
@@ -91,13 +89,13 @@ export class TokenBar extends Application {
   }
 
   setPos() {
-    this.pos = game.user.getFlag('monks-tokenbar', 'position');
+    this.pos = game.user.getFlag('ptu-tokenbar', 'position');
 
     if (this.pos == undefined) {
       let hbpos = $('#hotbar').position();
       let width = $('#hotbar').width();
       this.pos = { left: hbpos.left + width + 4, right: '', top: '', bottom: 10 };
-      game.user.setFlag('monks-tokenbar', 'position', this.pos);
+      game.user.setFlag('ptu-tokenbar', 'position', this.pos);
     }
 
     log('Setting position', this.pos, this.element);
@@ -128,10 +126,10 @@ export class TokenBar extends Application {
     let stat3 = getProperty(actor.data.data, setting('stat3-resource'));
     if (stat3 != undefined) stat3 = stat3.toString();
 
-    token.unsetFlag('monks-tokenbar', 'notified');
+    token.unsetFlag('ptu-tokenbar', 'notified');
 
     let resources = [{}, {}];
-    if (game.settings.get('monks-tokenbar', 'show-resource-bars')) {
+    if (game.settings.get('ptu-tokenbar', 'show-resource-bars')) {
       resources[0] = this.getResourceBar(token, 'bar1');
       resources[1] = this.getResourceBar(token, 'bar2');
     }
@@ -148,7 +146,7 @@ export class TokenBar extends Application {
       token: token,
       img: img,
       thumb: thumb?.thumb || thumb,
-      movement: token.getFlag('monks-tokenbar', 'movement'),
+      movement: token.getFlag('ptu-tokenbar', 'movement'),
       stat1: stat1,
       stat2: stat2,
       stat3: stat3,
@@ -260,8 +258,8 @@ export class TokenBar extends Application {
 
       diff.thumb = thumb?.thumb || thumb;
     }
-    if (tkn.movement != tkn.token.getFlag('monks-tokenbar', 'movement')) {
-      diff.movement = tkn.token.getFlag('monks-tokenbar', 'movement');
+    if (tkn.movement != tkn.token.getFlag('ptu-tokenbar', 'movement')) {
+      diff.movement = tkn.token.getFlag('ptu-tokenbar', 'movement');
     }
 
     if (Object.keys(diff).length > 0) {
@@ -419,8 +417,8 @@ export class TokenBar extends Application {
 
               //$(elmnt).css({ bottom: (position.bottom || ''), top: (position.top || ''), left: (position.left || ''), right: (position.right || '') });
 
-              log(`Setting monks-tokenbar position:`, position);
-              game.user.setFlag('monks-tokenbar', 'position', position);
+              log(`Setting ptu-tokenbar position:`, position);
+              game.user.setFlag('ptu-tokenbar', 'position', position);
               this.pos = position;
             }
           }
@@ -435,7 +433,7 @@ export class TokenBar extends Application {
   _contextMenu(html) {
     let context = new ContextMenu(html, '.token', [
       {
-        name: 'MonksTokenBar.PrivateMessage',
+        name: 'PTUTokenBar.PrivateMessage',
         icon: '<i class="fas fa-microphone"></i>',
         condition: (li) => {
           const entry = this.tokens.find((t) => t.id === li[0].dataset.tokenId);
@@ -464,7 +462,7 @@ export class TokenBar extends Application {
         },
       },
       {
-        name: 'MonksTokenBar.EditCharacter',
+        name: 'PTUTokenBar.EditCharacter',
         icon: '<i class="fas fa-edit"></i>',
         callback: (li) => {
           const entry = this.tokens.find((t) => t.id === li[0].dataset.tokenId);
@@ -472,7 +470,7 @@ export class TokenBar extends Application {
         },
       },
       {
-        name: 'MonksTokenBar.EditToken',
+        name: 'PTUTokenBar.EditToken',
         icon: '<i class="fas fa-edit"></i>',
         callback: (li) => {
           const entry = this.tokens.find((t) => t.id === li[0].dataset.tokenId);
@@ -480,7 +478,7 @@ export class TokenBar extends Application {
         },
       },
       {
-        name: 'MonksTokenBar.TargetToken',
+        name: 'PTUTokenBar.TargetToken',
         icon: '<i class="fas fa-bullseye"></i>',
         condition: game.user.isGM,
         callback: (li) => {
@@ -490,30 +488,30 @@ export class TokenBar extends Application {
         },
       },
       {
-        name: 'MonksTokenBar.FreeMovement',
+        name: 'PTUTokenBar.FreeMovement',
         icon: '<i class="fas fa-running" data-movement="free"></i>',
         condition: game.user.isGM,
         callback: (li) => {
           let entry = this.getEntry(li[0].dataset.tokenId);
-          MonksTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.FREE, entry.token);
+          PTUTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.FREE, entry.token);
         },
       },
       {
-        name: 'MonksTokenBar.NoMovement',
+        name: 'PTUTokenBar.NoMovement',
         icon: '<i class="fas fa-street-view" data-movement="none"></i>',
         condition: game.user.isGM,
         callback: (li) => {
           let entry = this.getEntry(li[0].dataset.tokenId);
-          MonksTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.NONE, entry.token);
+          PTUTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.NONE, entry.token);
         },
       },
       {
-        name: 'MonksTokenBar.CombatTurn',
+        name: 'PTUTokenBar.CombatTurn',
         icon: '<i class="fas fa-fist-raised" data-movement="combat"></i>',
         condition: game.user.isGM,
         callback: (li) => {
           let entry = this.getEntry(li[0].dataset.tokenId);
-          MonksTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.COMBAT, entry.token);
+          PTUTokenBar.changeTokenMovement(MTB_MOVEMENT_TYPE.COMBAT, entry.token);
         },
       },
     ]);
@@ -523,8 +521,8 @@ export class TokenBar extends Application {
       let result = oldRender.call(this, target);
 
       //Highlight the current movement if different from the global
-      const entry = MonksTokenBar?.tokenbar.tokens.find((t) => t.id === target[0].dataset.tokenId);
-      let movement = entry?.token.getFlag('monks-tokenbar', 'movement');
+      const entry = PTUTokenBar?.tokenbar.tokens.find((t) => t.id === target[0].dataset.tokenId);
+      let movement = entry?.token.getFlag('ptu-tokenbar', 'movement');
       let html = $('#context-menu');
       if (movement != undefined) {
         $('i[data-movement="' + movement + '"]', html)
@@ -544,7 +542,7 @@ export class TokenBar extends Application {
     event.preventDefault();
 
     const btn = event.currentTarget;
-    MonksTokenBar.changeGlobalMovement(btn.dataset.movement);
+    PTUTokenBar.changeGlobalMovement(btn.dataset.movement);
   }
 
   /* -------------------------------------------- */
@@ -622,19 +620,19 @@ export class TokenBar extends Application {
 }
 
 //Hooks.on('renderTokenBar', (app, html) => {
-//MonksTokenBar.tokenbar.setPos().show();
+//PTUTokenBar.tokenbar.setPos().show();
 //if (!app.ready) {
 //    app.show(); //setPos().show();
 //   app.ready = true;
 //}
 
 /*
-    if (setting('popout-tokenbar') && MonksTokenBar.tokenbar.element[0] != undefined) {
-        MonksTokenBar.tokenbar.element[0].style.width = null;
-        MonksTokenBar.tokenbar.setPosition();
+    if (setting('popout-tokenbar') && PTUTokenBar.tokenbar.element[0] != undefined) {
+        PTUTokenBar.tokenbar.element[0].style.width = null;
+        PTUTokenBar.tokenbar.setPosition();
     }*/
-//MonksTokenBar.tokenbar._getTokensByScene();
-//let gMovement = game.settings.get("monks-tokenbar", "movement");
+//PTUTokenBar.tokenbar._getTokensByScene();
+//let gMovement = game.settings.get("ptu-tokenbar", "movement");
 //$('.token-movement[data-movement="' + gMovement + '"]', html).addClass('active');
 
 //does the scene have an active combat
@@ -644,7 +642,7 @@ export class TokenBar extends Application {
 
 //$('.token-movement[data-movement="combat"]', html).toggleClass('disabled', combats.length == 0);
 /*$(app.tokens).each(function () {
-        let tMovement = this.token.getFlag("monks-tokenbar", "movement");
+        let tMovement = this.token.getFlag("ptu-tokenbar", "movement");
         if (tMovement != undefined && tMovement != gMovement) {
             $('.token[data-token-id="' + this.id + '"] .movement-icon', html).attr('movement', tMovement);
         }
@@ -660,33 +658,33 @@ export class TokenBar extends Application {
 //});
 
 Hooks.on('updateToken', (scene, token, data) => {
-  if (game.user.isGM && MonksTokenBar.tokenbar != undefined) {
-    //&& game.settings.get("monks-tokenbar", "show-resource-bars")
-    let tkn = MonksTokenBar.tokenbar.tokens.find((t) => t.token.id == token._id);
+  if (game.user.isGM && PTUTokenBar.tokenbar != undefined) {
+    //&& game.settings.get("ptu-tokenbar", "show-resource-bars")
+    let tkn = PTUTokenBar.tokenbar.tokens.find((t) => t.token.id == token._id);
     if (tkn != undefined) {
       // && (data.bar1 != undefined || data.bar2 != undefined)) {
-      MonksTokenBar.tokenbar.updateToken(tkn);
+      PTUTokenBar.tokenbar.updateToken(tkn);
     }
   }
 });
 
 Hooks.on('updateOwnedItem', (actor, item, data) => {
-  if (game.user.isGM && MonksTokenBar.tokenbar != undefined) {
-    //&& game.settings.get("monks-tokenbar", "show-resource-bars")
-    let tkn = MonksTokenBar.tokenbar.tokens.find((t) => t.token.actor.id == actor._id);
+  if (game.user.isGM && PTUTokenBar.tokenbar != undefined) {
+    //&& game.settings.get("ptu-tokenbar", "show-resource-bars")
+    let tkn = PTUTokenBar.tokenbar.tokens.find((t) => t.token.actor.id == actor._id);
     if (tkn != undefined) {
       // && (data.bar1 != undefined || data.bar2 != undefined)) {
       setTimeout(function () {
-        MonksTokenBar.tokenbar.updateToken(tkn);
+        PTUTokenBar.tokenbar.updateToken(tkn);
       }, 100); //delay slightly so the PF2E condition can be rendered properly.
     }
   }
 });
 
 Hooks.on('updateActor', (actor, data) => {
-  if (game.user.isGM && MonksTokenBar.tokenbar != undefined) {
-    //&& game.settings.get("monks-tokenbar", "show-resource-bars")
-    let tkn = MonksTokenBar.tokenbar.tokens.find((t) => t.token.actor._id == actor._id);
+  if (game.user.isGM && PTUTokenBar.tokenbar != undefined) {
+    //&& game.settings.get("ptu-tokenbar", "show-resource-bars")
+    let tkn = PTUTokenBar.tokenbar.tokens.find((t) => t.token.actor._id == actor._id);
     if (tkn != undefined) {
       /*if (data?.attributes?.ac != undefined
                 || data?.skills?.prc != undefined
@@ -697,10 +695,10 @@ Hooks.on('updateActor', (actor, data) => {
                 || getProperty(data.data, tkn.token.data.bar1.attribute) != undefined
                 || getProperty(data.data, tkn.token.data.bar2.attribute) != undefined)
             {*/
-      MonksTokenBar.tokenbar.updateToken(tkn);
+      PTUTokenBar.tokenbar.updateToken(tkn);
       //}
     } else if (data.permission != undefined) {
-      MonksTokenBar.tokenbar.refresh();
+      PTUTokenBar.tokenbar.refresh();
     }
   }
 });

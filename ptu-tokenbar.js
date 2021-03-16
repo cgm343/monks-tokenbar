@@ -1,20 +1,20 @@
 ﻿import { registerSettings } from "./settings.js";
 import { TokenBar } from "./apps/tokenbar.js";
-import { MonksTokenBarAPI } from "./monks-tokenbar-api.js";
+import { PTUTokenBarAPI } from "./ptu-tokenbar-api.js";
 
 export let debug = (...args) => {
-    if (debugEnabled > 1) console.log("DEBUG: monks-tokenbar | ", ...args);
+    if (debugEnabled > 1) console.log("DEBUG: ptu-tokenbar | ", ...args);
 };
-export let log = (...args) => console.log("monks-tokenbar | ", ...args);
+export let log = (...args) => console.log("ptu-tokenbar | ", ...args);
 export let warn = (...args) => {
-    if (debugEnabled > 0) console.warn("monks-tokenbar | ", ...args);
+    if (debugEnabled > 0) console.warn("ptu-tokenbar | ", ...args);
 };
-export let error = (...args) => console.error("monks-tokenbar | ", ...args);
+export let error = (...args) => console.error("ptu-tokenbar | ", ...args);
 export let i18n = key => {
     return game.i18n.localize(key);
 };
 export let setting = key => {
-    return game.settings.get("monks-tokenbar", key);
+    return game.settings.get("ptu-tokenbar", key);
 };
 
 export const MTB_MOVEMENT_TYPE = {
@@ -23,7 +23,7 @@ export const MTB_MOVEMENT_TYPE = {
     COMBAT: 'combat'
 }
 
-export class MonksTokenBar {
+export class PTUTokenBar {
     static tracker = false;
     static tokenbar = null;
 
@@ -32,26 +32,26 @@ export class MonksTokenBar {
         // element statics
         //CONFIG.debug.hooks = true;
 
-        MonksTokenBar.SOCKET = "module.monks-tokenbar";
+        PTUTokenBar.SOCKET = "module.ptu-tokenbar";
 
         registerSettings();
 
         let oldTokenCanDrag = Token.prototype._canDrag;
         Token.prototype._canDrag = function (user, event) {
-            return (MonksTokenBar.allowMovement(this, false) ? oldTokenCanDrag.call(this, user, event) : false);
+            return (PTUTokenBar.allowMovement(this, false) ? oldTokenCanDrag.call(this, user, event) : false);
         };
     }
 
     static ready() {
-        game.socket.on(MonksTokenBar.SOCKET, MonksTokenBar.onMessage);
+        game.socket.on(PTUTokenBar.SOCKET, PTUTokenBar.onMessage);
 
-        MonksTokenBar.requestoptions = [];
+        PTUTokenBar.requestoptions = [];
         if (["dnd5e"].includes(game.system.id)) {
-            MonksTokenBar.requestoptions.push({ id: "init", text: i18n("MonksTokenBar.Initiative") });
-            MonksTokenBar.requestoptions.push({ id: "death", text: i18n("MonksTokenBar.DeathSavingThrow") });
+            PTUTokenBar.requestoptions.push({ id: "init", text: i18n("PTUTokenBar.Initiative") });
+            PTUTokenBar.requestoptions.push({ id: "death", text: i18n("PTUTokenBar.DeathSavingThrow") });
         }
         if (["pf2e"].includes(game.system.id)) {
-            MonksTokenBar.requestoptions.push({ id: "attribute", text: "Attributes", groups: { "perception": CONFIG.PF2E.attributes.perception } });
+            PTUTokenBar.requestoptions.push({ id: "attribute", text: "Attributes", groups: { "perception": CONFIG.PF2E.attributes.perception } });
         }
         let config;
 		switch (game.system.id) {
@@ -64,46 +64,46 @@ export class MonksTokenBar {
 		if(config){
 			//Ability rolls
 			if (config.abilities != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "ability", text: i18n("MonksTokenBar.Ability"), groups: config.abilities });
+				PTUTokenBar.requestoptions.push({ id: "ability", text: i18n("PTUTokenBar.Ability"), groups: config.abilities });
 			}
 			else if (config.atributos != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "ability", text: i18n("MonksTokenBar.Ability"), groups: config.atributos });
+				PTUTokenBar.requestoptions.push({ id: "ability", text: i18n("PTUTokenBar.Ability"), groups: config.atributos });
 			}
 			else if (config.scores != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "scores", text: i18n("MonksTokenBar.Ability"), groups: config.scores });
+				PTUTokenBar.requestoptions.push({ id: "scores", text: i18n("PTUTokenBar.Ability"), groups: config.scores });
 			}
 			//Saving Throw
 			if (config.saves != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "save", text: i18n("MonksTokenBar.SavingThrow"), groups: config.saves });
+				PTUTokenBar.requestoptions.push({ id: "save", text: i18n("PTUTokenBar.SavingThrow"), groups: config.saves });
 			}
 			else if (config.savingThrows != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "save", text: i18n("MonksTokenBar.SavingThrow"), groups: config.savingThrows });
+				PTUTokenBar.requestoptions.push({ id: "save", text: i18n("PTUTokenBar.SavingThrow"), groups: config.savingThrows });
 			}
 			else if (config.resistencias != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "save", text: i18n("MonksTokenBar.SavingThrow"), groups: config.resistencias });
+				PTUTokenBar.requestoptions.push({ id: "save", text: i18n("PTUTokenBar.SavingThrow"), groups: config.resistencias });
 			}
 			else if (config.saves_long != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "save", text: i18n("MonksTokenBar.SavingThrow"), groups: config.saves_long });
+				PTUTokenBar.requestoptions.push({ id: "save", text: i18n("PTUTokenBar.SavingThrow"), groups: config.saves_long });
 			}
 			else if (["dnd5e"].includes(game.system.id)) {
-				MonksTokenBar.requestoptions.push({ id: "save", text: i18n("MonksTokenBar.SavingThrow"), groups: config.abilities });
+				PTUTokenBar.requestoptions.push({ id: "save", text: i18n("PTUTokenBar.SavingThrow"), groups: config.abilities });
 			}
 
 			//Skills
 			if (config.skills != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "skill", text: i18n("MonksTokenBar.Skill"), groups: config.skills });
+				PTUTokenBar.requestoptions.push({ id: "skill", text: i18n("PTUTokenBar.Skill"), groups: config.skills });
 			}
 			else if (config.pericias != undefined) {
-				MonksTokenBar.requestoptions.push({ id: "skill", text: i18n("MonksTokenBar.Skill"), groups: config.pericias });
+				PTUTokenBar.requestoptions.push({ id: "skill", text: i18n("PTUTokenBar.Skill"), groups: config.pericias });
 			}
 		}
-        MonksTokenBar.requestoptions.push({
+        PTUTokenBar.requestoptions.push({
             id: "dice", text: "Dice", groups: { "1d2": "1d2", "1d4": "1d4", "1d6": "1d6", "1d8": "1d8", "1d10": "1d10", "1d12": "1d12", "1d20": "1d20", "1d100": "1d100" }
         });
 
         if ((game.user.isGM || setting("allow-player")) && !setting("disable-tokenbar")) {
-            MonksTokenBar.tokenbar = new TokenBar();
-            MonksTokenBar.tokenbar.refresh();
+            PTUTokenBar.tokenbar = new TokenBar();
+            PTUTokenBar.tokenbar.refresh();
         }
     }
 
@@ -128,8 +128,8 @@ export class MonksTokenBar {
                 if (data.tokenid == undefined || canvas.tokens.get(data.tokenid)?.owner) {
                     ui.notifications.warn(data.msg);
                     log('movement change');
-                    if (MonksTokenBar.tokenbar != undefined) {
-                        MonksTokenBar.tokenbar.render(true);
+                    if (PTUTokenBar.tokenbar != undefined) {
+                        PTUTokenBar.tokenbar.render(true);
                     }
                 }
             }
@@ -156,60 +156,60 @@ export class MonksTokenBar {
             return;
 
         log('Changing global movement', movement);
-        await game.settings.set("monks-tokenbar", "movement", movement);
+        await game.settings.set("ptu-tokenbar", "movement", movement);
         //clear all the tokens individual movement settings
-        if (MonksTokenBar.tokenbar != undefined) {
-            let tokenbar = MonksTokenBar.tokenbar;
+        if (PTUTokenBar.tokenbar != undefined) {
+            let tokenbar = PTUTokenBar.tokenbar;
             for (let i = 0; i < tokenbar.tokens.length; i++) {
-                await tokenbar.tokens[i].token.setFlag("monks-tokenbar", "movement", null);
-                tokenbar.tokens[i].token.unsetFlag("monks-tokenbar", "notified");
+                await tokenbar.tokens[i].token.setFlag("ptu-tokenbar", "movement", null);
+                tokenbar.tokens[i].token.unsetFlag("ptu-tokenbar", "notified");
             };
             tokenbar.render(true);
         }
 
-        MonksTokenBar.displayNotification(movement);
+        PTUTokenBar.displayNotification(movement);
     }
 
     static async changeTokenMovement(movement, tokens) {
         if (tokens == undefined)
             return;
 
-        if (!MonksTokenBar.isMovement(movement))
+        if (!PTUTokenBar.isMovement(movement))
             return;
 
         tokens = tokens instanceof Array ? tokens : [tokens];
 
         log('Changing token movement', tokens);
 
-        let newMove = (game.settings.get("monks-tokenbar", "movement") != movement ? movement : null);
+        let newMove = (game.settings.get("ptu-tokenbar", "movement") != movement ? movement : null);
         for (let token of tokens) {
-            let oldMove = token.getFlag("monks-tokenbar", "movement");
+            let oldMove = token.getFlag("ptu-tokenbar", "movement");
             if (newMove != oldMove) {
-                await token.setFlag("monks-tokenbar", "movement", newMove);
-                await token.unsetFlag("monks-tokenbar", "notified");
+                await token.setFlag("ptu-tokenbar", "movement", newMove);
+                await token.unsetFlag("ptu-tokenbar", "notified");
 
-                let dispMove = token.getFlag("monks-tokenbar", "movement") || game.settings.get("monks-tokenbar", "movement") || MTB_MOVEMENT_TYPE.FREE;
-                MonksTokenBar.displayNotification(dispMove, token);
+                let dispMove = token.getFlag("ptu-tokenbar", "movement") || game.settings.get("ptu-tokenbar", "movement") || MTB_MOVEMENT_TYPE.FREE;
+                PTUTokenBar.displayNotification(dispMove, token);
 
-                /*if (MonksTokenBar.tokenbar != undefined) {
-                    let tkn = MonksTokenBar.tokenbar.tokens.find(t => { return t.id == token.id });
+                /*if (PTUTokenBar.tokenbar != undefined) {
+                    let tkn = PTUTokenBar.tokenbar.tokens.find(t => { return t.id == token.id });
                     if (tkn != undefined)
                         tkn.movement = newMove;
                 } */
             }
         }
 
-        //if (MonksTokenBar.tokenbar != undefined)
-        //    MonksTokenBar.tokenbar.render(true);
+        //if (PTUTokenBar.tokenbar != undefined)
+        //    PTUTokenBar.tokenbar.render(true);
     }
 
     static displayNotification(movement, token) {
-        if (game.settings.get("monks-tokenbar", "notify-on-change")) {
-            let msg = (token != undefined ? token.name + ": " : "") + i18n("MonksTokenBar.MovementChanged") + (movement == MTB_MOVEMENT_TYPE.FREE ? i18n("MonksTokenBar.FreeMovement") : (movement == MTB_MOVEMENT_TYPE.NONE ? i18n("MonksTokenBar.NoMovement") : i18n("MonksTokenBar.CombatTurn")));
+        if (game.settings.get("ptu-tokenbar", "notify-on-change")) {
+            let msg = (token != undefined ? token.name + ": " : "") + i18n("PTUTokenBar.MovementChanged") + (movement == MTB_MOVEMENT_TYPE.FREE ? i18n("PTUTokenBar.FreeMovement") : (movement == MTB_MOVEMENT_TYPE.NONE ? i18n("PTUTokenBar.NoMovement") : i18n("PTUTokenBar.CombatTurn")));
             ui.notifications.warn(msg);
             log('display notification');
             game.socket.emit(
-                MonksTokenBar.SOCKET,
+                PTUTokenBar.SOCKET,
                 {
                     msgtype: 'movementchange',
                     senderId: game.user._id,
@@ -250,16 +250,16 @@ export class MonksTokenBar {
         }
 
         if (!game.user.isGM && token != undefined) {
-            let movement = token.getFlag("monks-tokenbar", "movement") || game.settings.get("monks-tokenbar", "movement") || MTB_MOVEMENT_TYPE.FREE;
+            let movement = token.getFlag("ptu-tokenbar", "movement") || game.settings.get("ptu-tokenbar", "movement") || MTB_MOVEMENT_TYPE.FREE;
             if (movement == MTB_MOVEMENT_TYPE.NONE ||
                 (movement == MTB_MOVEMENT_TYPE.COMBAT && blockCombat(token))) {
                 //prevent the token from moving
-                if (notify && (!token.getFlag("monks-tokenbar", "notified") || false)) {
-                    ui.notifications.warn(movement == MTB_MOVEMENT_TYPE.COMBAT ? i18n("MonksTokenBar.CombatTurnMovementLimited") : i18n("MonksTokenBar.NormalMovementLimited"));
-                    token.setFlag("monks-tokenbar", "notified", true);
+                if (notify && (!token.getFlag("ptu-tokenbar", "notified") || false)) {
+                    ui.notifications.warn(movement == MTB_MOVEMENT_TYPE.COMBAT ? i18n("PTUTokenBar.CombatTurnMovementLimited") : i18n("PTUTokenBar.NormalMovementLimited"));
+                    token.setFlag("ptu-tokenbar", "notified", true);
                     setTimeout(function (token) {
                         log('unsetting notified', token);
-                        token.unsetFlag("monks-tokenbar", "notified");
+                        token.unsetFlag("ptu-tokenbar", "notified");
                     }, 30000, token);
                 }
                 return false;
@@ -279,7 +279,7 @@ export class MonksTokenBar {
                 //set movement to free movement
                 let movement = setting("movement-after-combat");
                 if (movement != 'ignore')
-                    MonksTokenBar.changeGlobalMovement(movement);
+                    PTUTokenBar.changeGlobalMovement(movement);
             }
         }
     }
@@ -289,34 +289,34 @@ Hooks.once('init', async function () {
     log('Initializing Combat Details');
     // Assign custom classes and constants here
     // Register custom module settings
-    MonksTokenBar.init();
-    MonksTokenBarAPI.init();
+    PTUTokenBar.init();
+    PTUTokenBarAPI.init();
 
-    //$('body').on('click', $.proxy(MonksTokenBar.setGrabMessage, MonksTokenBar, null));
+    //$('body').on('click', $.proxy(PTUTokenBar.setGrabMessage, PTUTokenBar, null));
 });
 
-Hooks.on("deleteCombat", MonksTokenBar.onDeleteCombat);
+Hooks.on("deleteCombat", PTUTokenBar.onDeleteCombat);
 
 Hooks.on("updateCombat", function (combat, delta) {
     if (game.user.isGM) {
-        if (MonksTokenBar.tokenbar) {
-            $(MonksTokenBar.tokenbar.tokens).each(function () {
-                this.token.unsetFlag("monks-tokenbar", "nofified");
+        if (PTUTokenBar.tokenbar) {
+            $(PTUTokenBar.tokenbar.tokens).each(function () {
+                this.token.unsetFlag("ptu-tokenbar", "nofified");
             });
         }
 
         if (delta.round === 1 && combat.turn === 0 && combat.started === true && setting("change-to-combat")) {
-            MonksTokenBar.changeGlobalMovement(MTB_MOVEMENT_TYPE.COMBAT);
+            PTUTokenBar.changeGlobalMovement(MTB_MOVEMENT_TYPE.COMBAT);
         }
     }
 });
 
-Hooks.on("ready", MonksTokenBar.ready);
+Hooks.on("ready", PTUTokenBar.ready);
 
 Hooks.on('preUpdateToken', (scene, data, update, options, userId) => {
     if ((update.x != undefined || update.y != undefined) && !game.user.isGM) {
         let token = canvas.tokens.get(data._id);
-        let allow = MonksTokenBar.allowMovement(token);
+        let allow = PTUTokenBar.allowMovement(token);
         if (!allow) {
             delete update.x;
             delete update.y;
