@@ -2,7 +2,7 @@
 	"name": "ptu-tokenbar",
 	"title": "PTU TokenBar",
 	"description": "Add a bar with all the current player tokens.",
-	"version": "1.0.29",
+	"version": "1.0.30",
 	"author": "IronMonk, ironmonk88#4075",
 	"socket": true,
 	"languages": [
@@ -28,8 +28,8 @@
 		}
 	],
 	"esmodules": [
-		"pty-tokenbar.js",
-		"pty-tokenbar-api.js",
+		"ptu-tokenbar.js",
+		"ptu-tokenbar-api.js",
 		"./apps/tokenbar.js",
 		"settings.js"
 	],
