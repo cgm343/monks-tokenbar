@@ -1467,7 +1467,7 @@ export const registerSettings = function () {
 		"fa-zhihu": "\f63f"
 	};
 
-	console.dir(game.world.system)
+	// console.dir(game.world.system) ptu
 
 	let stat1;
 	switch (game.world.system) {
@@ -1479,6 +1479,9 @@ export const registerSettings = function () {
 			break;
 		case "ose":
 			stat1 = "ac.value";
+			break;
+		case "ptu":
+			stat1 = "evasion.physical";
 			break;
 		default:
 			stat1 = "attributes.ac.value";
@@ -1498,6 +1501,9 @@ export const registerSettings = function () {
 		case "pf2e":
 			stat2 = "attributes.perception.value";
 			break;
+		case "ptu":
+			stat2 = "evasion.special";
+			break;
 		default:
 			stat2 = "";
 	}
@@ -1516,6 +1522,9 @@ export const registerSettings = function () {
 		case "pf2e":
 			stat3 = "attributes.perception.value";
 			break;
+		case "ptu":
+				stat3 = "evasion.speed";
+				break;
 		default:
 			stat3 = "";
 	}
@@ -1623,7 +1632,7 @@ export const registerSettings = function () {
 		hint: game.i18n.localize("PTUTokenBar.stat2-icon.hint"),
 		scope: "client",
 		config: true,
-		default: "fa-eye",
+		default: "fa-ankh",
 		type: String,
 		//choices: imageoptions,
 		onChange: () => {
@@ -1646,7 +1655,7 @@ export const registerSettings = function () {
 		hint: game.i18n.localize("PTUTokenBar.stat3-icon.hint"),
 		scope: "client",
 		config: true,
-		default: "fa-eye",
+		default: "fa-running",
 		type: String,
 		//choices: imageoptions,
 		onChange: () => {

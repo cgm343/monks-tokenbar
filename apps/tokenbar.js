@@ -117,7 +117,7 @@ export class TokenBar extends Application {
   async mapToken(token) {
     let actor = token.actor;
 
-    console.dir(actor);
+    // console.dir(actor);
 
     let stat1 = getProperty(actor.data.data, setting('stat1-resource'));
     if (stat1 != undefined) stat1 = stat1.toString();

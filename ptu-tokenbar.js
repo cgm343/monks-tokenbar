@@ -45,7 +45,7 @@ export class PTUTokenBar {
     static ready() {
         game.socket.on(PTUTokenBar.SOCKET, PTUTokenBar.onMessage);
 
-        console.dir(game.system.id)
+        // console.dir(game.system.id) ptu
 
         PTUTokenBar.requestoptions = [];
         if (["dnd5e"].includes(game.system.id)) {
