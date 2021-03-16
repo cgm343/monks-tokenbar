@@ -45,6 +45,8 @@ export class PTUTokenBar {
     static ready() {
         game.socket.on(PTUTokenBar.SOCKET, PTUTokenBar.onMessage);
 
+        console.dir(game.system.id)
+
         PTUTokenBar.requestoptions = [];
         if (["dnd5e"].includes(game.system.id)) {
             PTUTokenBar.requestoptions.push({ id: "init", text: i18n("PTUTokenBar.Initiative") });

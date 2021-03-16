@@ -1467,6 +1467,8 @@ export const registerSettings = function () {
 		"fa-zhihu": "\f63f"
 	};
 
+	console.dir(game.world.system)
+
 	let stat1;
 	switch (game.world.system) {
 		case "pf1":
@@ -1640,8 +1642,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat3-icon", {
-		name: game.i18n.localize("PTUTokenBar.stat2-icon.name"),
-		hint: game.i18n.localize("PTUTokenBar.stat2-icon.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat3-icon.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat3-icon.hint"),
 		scope: "client",
 		config: true,
 		default: "fa-eye",
@@ -1652,8 +1654,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat3-resource", {
-		name: game.i18n.localize("PTUTokenBar.stat2-resource.name"),
-		hint: game.i18n.localize("PTUTokenBar.stat2-resource.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat3-resource.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat3-resource.hint"),
 		scope: "client",
 		config: true,
 		default: stat3,
