@@ -2,18 +2,18 @@ import { ResetPosition } from "./apps/resetposition.js";
 
 export const registerSettings = function () {
     // Register any custom module settings here
-	let modulename = "monks-tokenbar";
+	let modulename = "ptu-tokenbar";
 
 	let imageoptions = {
-		'token': game.i18n.localize("MonksTokenBar.token-pictures.token"),
-		'actor': game.i18n.localize("MonksTokenBar.token-pictures.actor"),
+		'token': game.i18n.localize("PTUTokenBar.token-pictures.token"),
+		'actor': game.i18n.localize("PTUTokenBar.token-pictures.actor"),
 	};
 
 	let movementoptions = {
-		'free': game.i18n.localize("MonksTokenBar.FreeMovement"),
-		'none': game.i18n.localize("MonksTokenBar.NoMovement"),
-		'combat': game.i18n.localize("MonksTokenBar.CombatTurn"),
-		'ignore': game.i18n.localize("MonksTokenBar.Ignore"),
+		'free': game.i18n.localize("PTUTokenBar.FreeMovement"),
+		'none': game.i18n.localize("PTUTokenBar.NoMovement"),
+		'combat': game.i18n.localize("PTUTokenBar.CombatTurn"),
+		'ignore': game.i18n.localize("PTUTokenBar.Ignore"),
 	};
 
 	let iconoptions = {
@@ -1519,8 +1519,8 @@ export const registerSettings = function () {
 	}
 
 	game.settings.register(modulename, "notify-on-change", {
-		name: game.i18n.localize("MonksTokenBar.notify-on-change.name"),
-		hint: game.i18n.localize("MonksTokenBar.notify-on-change.hint"),
+		name: game.i18n.localize("PTUTokenBar.notify-on-change.name"),
+		hint: game.i18n.localize("PTUTokenBar.notify-on-change.hint"),
 		scope: "world",
 		config: true,
 		default: true,
@@ -1528,16 +1528,16 @@ export const registerSettings = function () {
 	});
 
 	game.settings.register(modulename, "show-resource-bars", {
-		name: game.i18n.localize("MonksTokenBar.show-resource-bars.name"),
-		hint: game.i18n.localize("MonksTokenBar.show-resource-bars.hint"),
+		name: game.i18n.localize("PTUTokenBar.show-resource-bars.name"),
+		hint: game.i18n.localize("PTUTokenBar.show-resource-bars.hint"),
 		scope: "world",
 		config: true,
 		default: false,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "token-pictures", {
-		name: game.i18n.localize("MonksTokenBar.token-pictures.name"),
-		hint: game.i18n.localize("MonksTokenBar.token-pictures.hint"),
+		name: game.i18n.localize("PTUTokenBar.token-pictures.name"),
+		hint: game.i18n.localize("PTUTokenBar.token-pictures.hint"),
 		scope: "world",
 		config: true,
 		default: "token",
@@ -1545,16 +1545,16 @@ export const registerSettings = function () {
 		choices: imageoptions,
 	});
 	game.settings.register(modulename, "change-to-combat", {
-		name: game.i18n.localize("MonksTokenBar.change-to-combat.name"),
-		hint: game.i18n.localize("MonksTokenBar.change-to-combat.hint"),
+		name: game.i18n.localize("PTUTokenBar.change-to-combat.name"),
+		hint: game.i18n.localize("PTUTokenBar.change-to-combat.hint"),
 		scope: "world",
 		config: true,
 		default: true,
 		type: Boolean
 	});
 	game.settings.register(modulename, "movement-after-combat", {
-		name: game.i18n.localize("MonksTokenBar.movement-after-combat.name"),
-		hint: game.i18n.localize("MonksTokenBar.movement-after-combat.hint"),
+		name: game.i18n.localize("PTUTokenBar.movement-after-combat.name"),
+		hint: game.i18n.localize("PTUTokenBar.movement-after-combat.hint"),
 		scope: "world",
 		config: true,
 		default: "free",
@@ -1563,40 +1563,40 @@ export const registerSettings = function () {
 	});
 
 	game.settings.register(modulename, "allow-player", {
-		name: game.i18n.localize("MonksTokenBar.allow-player.name"),
-		hint: game.i18n.localize("MonksTokenBar.allow-player.hint"),
+		name: game.i18n.localize("PTUTokenBar.allow-player.name"),
+		hint: game.i18n.localize("PTUTokenBar.allow-player.hint"),
 		scope: "world",
 		config: true,
 		default: false,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "disable-tokenbar", {
-		name: game.i18n.localize("MonksTokenBar.disable-tokenbar.name"),
-		hint: game.i18n.localize("MonksTokenBar.disable-tokenbar.hint"),
+		name: game.i18n.localize("PTUTokenBar.disable-tokenbar.name"),
+		hint: game.i18n.localize("PTUTokenBar.disable-tokenbar.hint"),
 		scope: "client",
 		config: true,
 		default: false,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "delete-after-grab", {
-		name: game.i18n.localize("MonksTokenBar.delete-after-grab.name"),
-		hint: game.i18n.localize("MonksTokenBar.delete-after-grab.hint"),
+		name: game.i18n.localize("PTUTokenBar.delete-after-grab.name"),
+		hint: game.i18n.localize("PTUTokenBar.delete-after-grab.hint"),
 		scope: "world",
 		config: true,
 		default: false,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "popout-tokenbar", {
-		name: game.i18n.localize("MonksTokenBar.popout-tokenbar.name"),
-		hint: game.i18n.localize("MonksTokenBar.popout-tokenbar.hint"),
+		name: game.i18n.localize("PTUTokenBar.popout-tokenbar.name"),
+		hint: game.i18n.localize("PTUTokenBar.popout-tokenbar.hint"),
 		scope: "client",
 		config: false,
 		default: false,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "stat1-icon", {
-		name: game.i18n.localize("MonksTokenBar.stat1-icon.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat1-icon.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat1-icon.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat1-icon.hint"),
 		scope: "client",
 		config: true,
 		default: "fa-shield-alt",
@@ -1606,8 +1606,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat1-resource", {
-		name: game.i18n.localize("MonksTokenBar.stat1-resource.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat1-resource.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat1-resource.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat1-resource.hint"),
 		scope: "client",
 		config: true,
 		default: stat1,
@@ -1617,8 +1617,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat2-icon", {
-		name: game.i18n.localize("MonksTokenBar.stat2-icon.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat2-icon.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat2-icon.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat2-icon.hint"),
 		scope: "client",
 		config: true,
 		default: "fa-eye",
@@ -1629,8 +1629,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat2-resource", {
-		name: game.i18n.localize("MonksTokenBar.stat2-resource.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat2-resource.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat2-resource.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat2-resource.hint"),
 		scope: "client",
 		config: true,
 		default: stat2,
@@ -1640,8 +1640,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat3-icon", {
-		name: game.i18n.localize("MonksTokenBar.stat2-icon.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat2-icon.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat2-icon.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat2-icon.hint"),
 		scope: "client",
 		config: true,
 		default: "fa-eye",
@@ -1652,8 +1652,8 @@ export const registerSettings = function () {
 		}
 	});
 	game.settings.register(modulename, "stat3-resource", {
-		name: game.i18n.localize("MonksTokenBar.stat2-resource.name"),
-		hint: game.i18n.localize("MonksTokenBar.stat2-resource.hint"),
+		name: game.i18n.localize("PTUTokenBar.stat2-resource.name"),
+		hint: game.i18n.localize("PTUTokenBar.stat2-resource.hint"),
 		scope: "client",
 		config: true,
 		default: stat3,
