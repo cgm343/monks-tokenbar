@@ -1,9 +1,5 @@
 ﻿import { registerSettings } from "./settings.js";
 import { TokenBar } from "./apps/tokenbar.js";
-import { AssignXP, AssignXPApp } from "./apps/assignxp.js";
-import { SavingThrow } from "./apps/savingthrow.js";
-import { ContestedRoll } from "./apps/contestedroll.js";
-import { LootablesApp } from "./apps/lootables.js";
 import { MonksTokenBarAPI } from "./monks-tokenbar-api.js";
 
 export let debug = (...args) => {
@@ -109,26 +105,6 @@ export class MonksTokenBar {
             MonksTokenBar.tokenbar = new TokenBar();
             MonksTokenBar.tokenbar.refresh();
         }
-
-        if (game.user.isGM && setting('assign-loot') && game.modules.get("lootsheetnpc5e")?.active) {
-            let npcObject = (CONFIG.Actor.sheetClasses.npc || CONFIG.Actor.sheetClasses.minion);
-            if (npcObject != undefined) {
-                let npcSheetNames = Object.values(npcObject)
-                    .map((sheetClass) => sheetClass.cls)
-                    .map((sheet) => sheet.name);
-
-                npcSheetNames.forEach((sheetName) => {
-                    Hooks.on("render" + sheetName, (app, html, data) => {
-                        // only for GMs or the owner of this npc
-                        if (app?.token?.actor?.getFlag('monks-tokenbar', 'converted') && app.element.find(".revert-lootable").length == 0) {
-                            const link = $('<a class="revert-lootable"><i class="fas fa-backward"></i>Revert Lootable</a>');
-                            link.on("click", () => LootablesApp.revertLootable(app));
-                            app.element.find(".window-title").after(link);
-                        }
-                    });
-                });
-            }
-        }
     }
 
     static onMessage(data) {
@@ -141,24 +117,12 @@ export class MonksTokenBar {
                         let r = Roll.fromData(response.roll);
                         response.roll = r;
                     }
-                    if (data.type == 'savingthrow')
-                        SavingThrow.updateMessage(data.response, message, revealDice);
-                    else if (data.type == 'contestedroll')
-                        ContestedRoll.updateContestedRoll(data.response, message, revealDice);
                 }
             } break;
             case 'finishroll': {
                 if (game.user.isGM) {
                     let message = game.messages.get(data.msgid);
-                    if (data.type == 'savingthrow')
-                        SavingThrow.finishRolling(data.response, message);
-                    else if (data.type == 'contestedroll')
-                        ContestedRoll.finishRolling(data.actorid, message);
                 }
-            } break;
-            case 'assignxp': {
-                let message = game.messages.get(data.msgid);
-                AssignXP.onAssignXP(data.actorid, message);
             } break;
             case 'movementchange': {
                 if (data.tokenid == undefined || canvas.tokens.get(data.tokenid)?.owner) {
@@ -308,25 +272,7 @@ export class MonksTokenBar {
     static async onDeleteCombat(combat) {
         if (game.user.isGM) {
             if (combat.started == true) {
-                let axpa;
-                if (game.settings.get("monks-tokenbar", "show-xp-dialog") && (game.world.system !== "dnd5e" || (game.world.system === "dnd5e" && !game.settings.get('dnd5e', 'disableExperienceTracking')))) {
-                    axpa = new AssignXPApp(combat);
-                    await axpa.render(true);
-                }
 
-                if (setting("assign-loot") && game.modules.get("lootsheetnpc5e")?.active) {
-                    let lapp = new LootablesApp(combat);
-                    await lapp.render(true);
-
-                    if (axpa != undefined) {
-                        setTimeout(function () {
-                            axpa.position.left += 204;
-                            axpa.render();
-                            lapp.position.left -= 204;
-                            lapp.render();
-                        }, 100);
-                    }
-                }
             }
 
             if (game.combats.combats.length == 0) {
@@ -334,76 +280,6 @@ export class MonksTokenBar {
                 let movement = setting("movement-after-combat");
                 if (movement != 'ignore')
                     MonksTokenBar.changeGlobalMovement(movement);
-            }
-        }
-    }
-
-    static getRequestName(requestoptions, requesttype, request) {
-        let name = '';
-        switch (requesttype) {
-            case 'ability': name = i18n("MonksTokenBar.AbilityCheck"); break;
-            case 'save': name = i18n("MonksTokenBar.SavingThrow"); break;
-            case 'dice': name = i18n("MonksTokenBar.Roll"); break;
-            default:
-                name = (request != 'death' && request != 'init' ? i18n("MonksTokenBar.Check") : "");
-        }
-        let rt = requestoptions.find(o => {
-            return o.id == (requesttype || request);
-        });
-        let req = (rt?.groups && rt?.groups[request]);
-        let flavor = req || rt?.text;
-        switch (game.i18n.lang) {
-            case "pt-BR":
-            case "es":
-                name = name + ": " + flavor;
-                break;
-            case "en":
-            default:
-                name = flavor + " " + name;
-        }
-        return name;
-    }
-
-    static setGrabMessage(message, event) {
-        if (MonksTokenBar.grabmessage != undefined) {
-            $('#chat-log .chat-message[data-message-id="' + MonksTokenBar.grabmessage.id + '"]').removeClass('grabbing');
-        }
-
-        if (MonksTokenBar.grabmessage == message)
-            MonksTokenBar.grabmessage = null;
-        else {
-            MonksTokenBar.grabmessage = message;
-            if(message != undefined)
-                $('#chat-log .chat-message[data-message-id="' + MonksTokenBar.grabmessage.id + '"]').addClass('grabbing');
-        }
-
-        if (event.stopPropagation) event.stopPropagation();
-        if (event.preventDefault) event.preventDefault();
-        event.cancelBubble = true;
-        event.returnValue = false;
-    }
-
-    static onClickMessage(message, html) {
-        if (MonksTokenBar.grabmessage != undefined) {
-            //make sure this message matches the grab message
-            let roll = {};
-            if (game.system.id == 'pf2e') {
-                let [abilityId, type] = message.data.flags.pf2e.context.type.split('-');
-                roll = { type: (type == 'check' ? 'attribute': type), abilityId: abilityId };
-            } else
-                roll = message.getFlag(game.system.id, 'roll');
-            if (roll && MonksTokenBar.grabmessage.getFlag('monks-tokenbar', 'requesttype') == roll.type &&
-                MonksTokenBar.grabmessage.getFlag('monks-tokenbar', 'request') == (roll.skillId || roll.abilityId)) {
-                let tokenId = message.data.speaker.token;
-                let msgtoken = MonksTokenBar.grabmessage.getFlag('monks-tokenbar', 'token' + tokenId);
-
-                if (msgtoken != undefined) {
-                    let r = Roll.fromJSON(message.data.roll);
-                    SavingThrow.updateMessage([{ id: tokenId, roll: r }], MonksTokenBar.grabmessage);
-                    if (setting('delete-after-grab'))
-                        message.delete();
-                    MonksTokenBar.grabmessage = null;
-                }
             }
         }
     }
@@ -445,21 +321,5 @@ Hooks.on('preUpdateToken', (scene, data, update, options, userId) => {
             delete update.x;
             delete update.y;
         }
-    }
-});
-
-Hooks.on("getSceneControlButtons", (controls) => {
-    if (game.user.isGM && setting('show-lootable-menu') && game.modules.get("lootsheetnpc5e")?.active) {
-        let tokenControls = controls.find(control => control.name === "token")
-        tokenControls.tools.push({
-            name: "togglelootable",
-            title: "MonksTokenBar.Lootables",
-            icon: "fas fa-dolly-flatbed",
-            onClick: () => {
-                new LootablesApp().render(true);
-            },
-            toggle: false,
-            button: true
-        });
     }
 });

@@ -1466,7 +1466,7 @@ export const registerSettings = function () {
 		"fa-youtube-square": "\f431",
 		"fa-zhihu": "\f63f"
 	};
-	
+
 	let stat1;
 	switch (game.world.system) {
 		case "pf1":
@@ -1500,34 +1500,30 @@ export const registerSettings = function () {
 			stat2 = "";
 	}
 
-	let dividexp = true;
-	if (game.world.system == 'pf2e')
-		dividexp = false;
-	
+	let stat3;
+	switch (game.world.system) {
+		case "pf1":
+			stat3 = "skills.per.mod";
+			break;
+		case "dnd5e":
+			stat3 = "skills.prc.passive";
+			break;
+		case "tormenta20":
+			stat3 = "pericias.per.value";
+			break;
+		case "pf2e":
+			stat3 = "attributes.perception.value";
+			break;
+		default:
+			stat3 = "";
+	}
+
 	game.settings.register(modulename, "notify-on-change", {
 		name: game.i18n.localize("MonksTokenBar.notify-on-change.name"),
 		hint: game.i18n.localize("MonksTokenBar.notify-on-change.hint"),
 		scope: "world",
 		config: true,
 		default: true,
-		type: Boolean,
-	});
-
-	game.settings.register(modulename, "show-xp-dialog", {
-		name: game.i18n.localize("MonksTokenBar.show-xp-dialog.name"),
-		hint: game.i18n.localize("MonksTokenBar.show-xp-dialog.hint"),
-		scope: "world",
-		config: true,
-		default: true,
-		type: Boolean,
-	});
-
-	game.settings.register(modulename, "divide-xp", {
-		name: game.i18n.localize("MonksTokenBar.divide-xp.name"),
-		hint: game.i18n.localize("MonksTokenBar.divide-xp.hint"),
-		scope: "world",
-		config: true,
-		default: dividexp,
 		type: Boolean,
 	});
 
@@ -1565,14 +1561,7 @@ export const registerSettings = function () {
 		type: String,
 		choices: movementoptions,
 	});
-	game.settings.register(modulename, "assign-loot", {
-		name: game.i18n.localize("MonksTokenBar.assign-loot.name"),
-		hint: game.i18n.localize("MonksTokenBar.assign-loot.hint"),
-		scope: "world",
-		config: game.modules.get("lootsheetnpc5e")?.active,
-		default: false,
-		type: Boolean,
-	});
+
 	game.settings.register(modulename, "allow-player", {
 		name: game.i18n.localize("MonksTokenBar.allow-player.name"),
 		hint: game.i18n.localize("MonksTokenBar.allow-player.hint"),
@@ -1595,22 +1584,6 @@ export const registerSettings = function () {
 		scope: "world",
 		config: true,
 		default: false,
-		type: Boolean,
-	});
-	game.settings.register(modulename, "show-lootable-menu", {
-		name: game.i18n.localize("MonksTokenBar.show-lootable-menu.name"),
-		hint: game.i18n.localize("MonksTokenBar.show-lootable-menu.hint"),
-		scope: "world",
-		config: true,
-		default: true,
-		type: Boolean,
-	});
-	game.settings.register(modulename, "request-roll-sound", {
-		name: game.i18n.localize("MonksTokenBar.request-roll-sound.name"),
-		hint: game.i18n.localize("MonksTokenBar.request-roll-sound.hint"),
-		scope: "world",
-		config: true,
-		default: true,
 		type: Boolean,
 	});
 	game.settings.register(modulename, "popout-tokenbar", {
@@ -1666,6 +1639,29 @@ export const registerSettings = function () {
 			location.reload();
 		}
 	});
+	game.settings.register(modulename, "stat3-icon", {
+		name: game.i18n.localize("MonksTokenBar.stat2-icon.name"),
+		hint: game.i18n.localize("MonksTokenBar.stat2-icon.hint"),
+		scope: "client",
+		config: true,
+		default: "fa-eye",
+		type: String,
+		//choices: imageoptions,
+		onChange: () => {
+			location.reload();
+		}
+	});
+	game.settings.register(modulename, "stat3-resource", {
+		name: game.i18n.localize("MonksTokenBar.stat2-resource.name"),
+		hint: game.i18n.localize("MonksTokenBar.stat2-resource.hint"),
+		scope: "client",
+		config: true,
+		default: stat3,
+		type: String,
+		onChange: () => {
+			location.reload();
+		}
+	});
 	game.settings.registerMenu(modulename, 'resetPosition', {
 		name: 'Reset Position',
 		label: 'Reset Position',
@@ -1677,7 +1673,6 @@ export const registerSettings = function () {
 			log('Reset position');
 		}
 	});
-	
 	//this is just a global setting for movement mode
 	game.settings.register(modulename, "movement", {
 		scope: "world",

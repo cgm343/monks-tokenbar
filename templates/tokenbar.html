@@ -12,17 +12,6 @@
                 <i class="fas fa-fist-raised"></i>
             </div>
         </div>
-        <div class="flexcol dialog-col">
-            <a class="request-roll" title="{{localize 'MonksTokenBar.RequestRoll'}}">
-                <i class="fas fa-tools"></i>
-            </a>
-            <a class="contested-roll" title="{{localize 'MonksTokenBar.ContestedRoll'}}">
-                <i class="fas fa-people-arrows"></i>
-            </a>
-            <a class="assign-xp" title="{{localize 'MonksTokenBar.AssignXP'}}">
-                <i class="fas fa-book-medical"></i>
-            </a>
-        </div>
     </div>
     <nav id="token-action-bar" class="flexrow">
         <ol class="flexrow token-list">{{#each tokens}}
@@ -30,6 +19,7 @@
                 <div class="token-stats flexcol {{this.statClass}}">
                     <div class="token-stat stat1 flexrow">{{#if this.stat1}}<i class="fas {{../stat1icon}}"></i><span>{{this.stat1}}</span>{{/if}}</div>
                     <div class="token-stat stat2 flexrow">{{#if this.stat2}}<i class="fas {{../stat2icon}}"></i><span>{{this.stat2}}</span>{{/if}}</div>
+                    <div class="token-stat stat3 flexrow">{{#if this.stat3}}<i class="fas {{../stat3icon}}"></i><span>{{this.stat3}}</span>{{/if}}</div>
                 </div>
                 <div class="token-content">
                     <div class="movement-icon" movement="{{this.movement}}"><i class="fas"></i></div>
