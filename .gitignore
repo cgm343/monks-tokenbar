@@ -1,4 +1,6 @@
 screenshots/
 .svn/
 .vs/
+.DS_Store
 module.zip
+
