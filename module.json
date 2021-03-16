@@ -36,7 +36,7 @@
 	"styles": [ "css/tokenbar.css" ],
 	"packs": [],
 	"url": "https://github.com/cgm343/monks-tokenbar",
-	"download": "https://github.com/cgm343/monks-tokenbar/archive/module.zip",
+	"download": "https://github.com/cgm343/monks-tokenbar/releases/latest/download/module.zip",
 	"manifest": "https://github.com/cgm343/monks-tokenbar/releases/latest/download/module.json",
 	"bugs": "https://github.com/cgm343/monks-tokenbar/issues",
 	"allowBugReporter": true,
