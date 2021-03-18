@@ -114,19 +114,32 @@ export class TokenBar extends Application {
     }
   }
 
+  static processStat(formula, data) {
+    if (formula == undefined) return null;
+
+    let dataRgx = new RegExp(/([a-z.0-9_\-]+)/gi);
+    let result = formula.replace(dataRgx, (match, term) => {
+      let value = getProperty(data, term);
+      return value === undefined ? match : String(value).trim();
+    });
+
+    if (result == undefined) return null;
+
+    try {
+      result = eval(result);
+    } catch {}
+
+    return String(result);
+  }
+
   async mapToken(token) {
     let actor = token.actor;
 
     // console.dir(actor);
 
-    let stat1 = getProperty(actor.data.data, setting('stat1-resource'));
-    if (stat1 != undefined) stat1 = stat1.toString();
-
-    let stat2 = getProperty(actor.data.data, setting('stat2-resource'));
-    if (stat2 != undefined) stat2 = stat2.toString();
-
-    let stat3 = getProperty(actor.data.data, setting('stat3-resource'));
-    if (stat3 != undefined) stat3 = stat3.toString();
+    let stat1 = TokenBar.processStat(setting('stat1-resource'), actor.data.data);
+    let stat2 = TokenBar.processStat(setting('stat2-resource'), actor.data.data);
+    let stat3 = TokenBar.processStat(setting('stat3-resource'), actor.data.data);
 
     token.unsetFlag('ptu-tokenbar', 'notified');
 
@@ -152,7 +165,7 @@ export class TokenBar extends Application {
       stat1: stat1,
       stat2: stat2,
       stat3: stat3,
-      statClass: stat1 == undefined && stat2 == undefined && stat3 == undefined? 'hidden' : '',
+      statClass: stat1 == undefined && stat2 == undefined && stat3 == undefined ? 'hidden' : '',
       resource1: resources[0],
       resource2: resources[1],
     };
@@ -185,7 +198,10 @@ export class TokenBar extends Application {
   getResourceBar(token, bar) {
     let resource = {};
     if (token.data.displayBars > 0) {
+      console.dir(token)
+      console.dir(bar)
       const attr = token.getBarAttribute(bar);
+      console.dir(attr)
 
       if (attr != undefined && attr.type == 'bar') {
         const val = Number(attr.value);
@@ -233,16 +249,19 @@ export class TokenBar extends Application {
     }
     if (tkn.stat1 != getAttrProperty(tkn.token.actor.data.data, setting('stat1-resource'))) {
       diff.stat1 = getAttrProperty(tkn.token.actor.data.data, setting('stat1-resource'));
-      diff.statClass = tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
+      diff.statClass =
+        tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
     }
     if (tkn.stat2 != getAttrProperty(tkn.token.actor.data.data, setting('stat2-resource'))) {
       diff.stat2 = getAttrProperty(tkn.token.actor.data.data, setting('stat2-resource'));
-      diff.statClass = tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
+      diff.statClass =
+        tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
     }
     if (tkn.stat3 != getAttrProperty(tkn.token.actor.data.data, setting('stat3-resource'))) {
-        diff.stat3 = getAttrProperty(tkn.token.actor.data.data, setting('stat3-resource'));
-        diff.statClass = tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
-      }
+      diff.stat3 = getAttrProperty(tkn.token.actor.data.data, setting('stat3-resource'));
+      diff.statClass =
+        tkn.stat1 == undefined && tkn.stat2 == undefined && tkn.stat3 == undefined ? 'hidden' : '';
+    }
     if (
       tkn.img !=
       (setting('token-pictures') == 'actor' && tkn.token.actor != undefined
