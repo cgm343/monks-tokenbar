@@ -2,7 +2,7 @@
 	"name": "ptu-tokenbar",
 	"title": "PTU TokenBar",
 	"description": "Add a bar with all the current player tokens.",
-	"version": "1.0.35",
+	"version": "1.0.36",
 	"author": "IronMonk, ironmonk88#4075",
 	"socket": true,
 	"languages": [
