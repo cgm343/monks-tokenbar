@@ -197,6 +197,7 @@ export class TokenBar extends Application {
 
   getResourceBar(token, bar) {
     let resource = {};
+    console.dir(token)
     if (token.data.displayBars > 0) {
       console.dir(token)
       console.dir(bar)
@@ -239,6 +240,7 @@ export class TokenBar extends Application {
     //and need to check the stat values
     //and need to check the image
     let diff = {};
+    console.log(tkn);
     if (tkn?.resource1?.value != tkn.token.getBarAttribute('bar1')?.value) {
       //getAttrProperty(tkn.token.actor.data.data, tkn.token.data.bar1.attribute)) {
       diff.resource1 = this.getResourceBar(tkn.token, 'bar1');
